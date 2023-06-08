@@ -2,7 +2,7 @@
 
 Fully featured Tetris made entirely in x86 Assembly, using the Canvas Library.
 
-## Prerequisistes
+## Prerequisites
 
 - A CPU with x86_64 architecture that is able to operate in 32-bit mode.
 
