@@ -1,3 +1,5 @@
 picture.inc
 score.dat
 *.exe
+*.obj
+*.lnk
