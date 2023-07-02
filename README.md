@@ -14,15 +14,15 @@ A pre-built binary can be found in the [releases page](https://github.com/stancu
 
 1. Clone this repository:
 
-```cmd
+```
 git clone https://github.com/stancualex/tetris_in_assembly
 ```
 
 2. Open up a new command prompt, `cd` into the source directory and run the following command:
     - 32-bit MASM must be installed and on path.
 
-```cmd
-ml.exe tetris.asm /link /subsystem:console /entry:start msvcrt.lib && del *.obj *.lnk
+```
+ml.exe tetris.asm /link /subsystem:console /entry:start msvcrt.lib & del *.obj *.lnk
 ```
 
 ## Usage
