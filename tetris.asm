@@ -159,76 +159,76 @@ include letters.inc
 ; arg4 - pos_y
 
 make_text proc
-	push ebp
-	mov ebp, esp
-	pusha
+    push ebp
+    mov ebp, esp
+    pusha
 
-	mov eax, [ebp+arg1] ; citim simbolul de afisat
-	cmp eax, 'A'
-	jl make_digit
-	cmp eax, 'Z'
-	jg make_digit
-	sub eax, 'A'
-	lea esi, letters
-	jmp draw_text
+    mov eax, [ebp+arg1] ; citim simbolul de afisat
+    cmp eax, 'A'
+    jl make_digit
+    cmp eax, 'Z'
+    jg make_digit
+    sub eax, 'A'
+    lea esi, letters
+    jmp draw_text
 make_digit:
-	cmp eax, '0'
-	jl make_space
-	cmp eax, '9'
-	jg make_space
-	sub eax, '0'
-	lea esi, digits
-	jmp draw_text
-make_space:	
-	mov eax, 26 ; de la 0 pana la 25 sunt litere, 26 e space
-	lea esi, letters
+    cmp eax, '0'
+    jl make_space
+    cmp eax, '9'
+    jg make_space
+    sub eax, '0'
+    lea esi, digits
+    jmp draw_text
+make_space:
+    mov eax, 26 ; de la 0 pana la 25 sunt litere, 26 e space
+    lea esi, letters
 
 draw_text:
-	mov ebx, symbol_width
-	mul ebx
-	mov ebx, symbol_height
-	mul ebx
-	add esi, eax
-	mov ecx, symbol_height
+    mov ebx, symbol_width
+    mul ebx
+    mov ebx, symbol_height
+    mul ebx
+    add esi, eax
+    mov ecx, symbol_height
 bucla_simbol_linii:
-	mov edi, [ebp+arg2] ; pointer la matricea de pixeli
-	mov eax, [ebp+arg4] ; pointer la coord y
-	add eax, symbol_height
-	sub eax, ecx
-	mov ebx, area_width
-	mul ebx
-	add eax, [ebp+arg3] ; pointer la coord x
-	shl eax, 2 ; inmultim cu 4, avem un DWORD per pixel
-	add edi, eax
-	push ecx
-	mov ecx, symbol_width
+    mov edi, [ebp+arg2] ; pointer la matricea de pixeli
+    mov eax, [ebp+arg4] ; pointer la coord y
+    add eax, symbol_height
+    sub eax, ecx
+    mov ebx, area_width
+    mul ebx
+    add eax, [ebp+arg3] ; pointer la coord x
+    shl eax, 2 ; inmultim cu 4, avem un DWORD per pixel
+    add edi, eax
+    push ecx
+    mov ecx, symbol_width
 bucla_simbol_coloane:
-	cmp byte ptr [esi], 0
-	je simbol_pixel_alb
-	mov dword ptr [edi], white ; foreground
-	jmp simbol_pixel_next
+    cmp byte ptr [esi], 0
+    je simbol_pixel_alb
+    mov dword ptr [edi], white ; foreground
+    jmp simbol_pixel_next
 simbol_pixel_alb:
-	mov dword ptr [edi], grey ; background
+    mov dword ptr [edi], grey ; background
 simbol_pixel_next:
-	inc esi
-	add edi, 4
-	loop bucla_simbol_coloane
-	pop ecx
-	loop bucla_simbol_linii
-	popa
-	mov esp, ebp
-	pop ebp
-	ret
+    inc esi
+    add edi, 4
+    loop bucla_simbol_coloane
+    pop ecx
+    loop bucla_simbol_linii
+    popa
+    mov esp, ebp
+    pop ebp
+    ret
 make_text endp
 
 ; un macro ca sa apelam mai usor desenarea simbolului
 make_text_macro macro symbol, draw_area, x, y
-	push y
-	push x
-	push draw_area
-	push symbol
-	call make_text
-	add esp, 16
+    push y
+    push x
+    push draw_area
+    push symbol
+    call make_text
+    add esp, 16
 endm
 
 make_pixel macro x, y
@@ -624,7 +624,7 @@ continue_loop:
 
     mov esp, ebp
     pop ebp
-    ret 
+    ret
 update_board endp
 
 ; arg1: row
@@ -710,7 +710,7 @@ continue_loop:
 
     mov esp, ebp
     pop ebp
-    ret 
+    ret
 update_rows endp
 
 rotate_right proc
@@ -803,27 +803,27 @@ rotate_left endp
 ; arg2 - x (in cazul apasarii unei taste, x contine codul ascii al tastei care a fost apasata)
 ; arg3 - y
 draw proc
-	push ebp
-	mov ebp, esp
-	pusha
+    push ebp
+    mov ebp, esp
+    pusha
 
-	mov eax, [ebp+arg1]
-	cmp eax, 1
-	jz evt_click
+    mov eax, [ebp+arg1]
+    cmp eax, 1
+    jz evt_click
     cmp eax, 3
     jz evt_keyboard
-	cmp eax, 2
-	jz evt_timer ; nu s-a efectuat click pe nimic
-	; mai jos e codul care intializeaza fereastra cu pixeli albi
-	mov eax, area_width
-	mov ebx, area_height
-	mul ebx
-	shl eax, 2
-	push eax
-	push 50 ; culoarea gri inchis
-	push area
-	call memset
-	add esp, 12
+    cmp eax, 2
+    jz evt_timer ; nu s-a efectuat click pe nimic
+    ; mai jos e codul care intializeaza fereastra cu pixeli albi
+    mov eax, area_width
+    mov ebx, area_height
+    mul ebx
+    shl eax, 2
+    push eax
+    push 50 ; culoarea gri inchis
+    push area
+    call memset
+    add esp, 12
 
     mov line_offset, board_y
 horizontal_line_loop:
@@ -868,32 +868,32 @@ game_on:
 
 skip_read:
 
-	make_text_macro ' ', area, game_over_x - 40, game_over_y
-	make_text_macro ' ', area, game_over_x - 30, game_over_y
-	make_text_macro ' ', area, game_over_x - 20, game_over_y
-	make_text_macro ' ', area, game_over_x - 10, game_over_y
-	make_text_macro ' ', area, game_over_x, game_over_y
-	make_text_macro ' ', area, game_over_x + 10, game_over_y
-	make_text_macro ' ', area, game_over_x + 20, game_over_y
-	make_text_macro ' ', area, game_over_x + 30, game_over_y
-	make_text_macro ' ', area, game_over_x + 40, game_over_y
+    make_text_macro ' ', area, game_over_x - 40, game_over_y
+    make_text_macro ' ', area, game_over_x - 30, game_over_y
+    make_text_macro ' ', area, game_over_x - 20, game_over_y
+    make_text_macro ' ', area, game_over_x - 10, game_over_y
+    make_text_macro ' ', area, game_over_x, game_over_y
+    make_text_macro ' ', area, game_over_x + 10, game_over_y
+    make_text_macro ' ', area, game_over_x + 20, game_over_y
+    make_text_macro ' ', area, game_over_x + 30, game_over_y
+    make_text_macro ' ', area, game_over_x + 40, game_over_y
 
     clear_buf board
     call new_shape
     call draw_board
 
-	jmp afisare_scor
+    jmp afisare_scor
 
 et_game_over:
-	make_text_macro 'G', area, game_over_x - 40, game_over_y
-	make_text_macro 'A', area, game_over_x - 30, game_over_y
-	make_text_macro 'M', area, game_over_x - 20, game_over_y
-	make_text_macro 'E', area, game_over_x - 10, game_over_y
-	make_text_macro ' ', area, game_over_x, game_over_y
-	make_text_macro 'O', area, game_over_x + 10, game_over_y
-	make_text_macro 'V', area, game_over_x + 20, game_over_y
-	make_text_macro 'E', area, game_over_x + 30, game_over_y
-	make_text_macro 'R', area, game_over_x + 40, game_over_y
+    make_text_macro 'G', area, game_over_x - 40, game_over_y
+    make_text_macro 'A', area, game_over_x - 30, game_over_y
+    make_text_macro 'M', area, game_over_x - 20, game_over_y
+    make_text_macro 'E', area, game_over_x - 10, game_over_y
+    make_text_macro ' ', area, game_over_x, game_over_y
+    make_text_macro 'O', area, game_over_x + 10, game_over_y
+    make_text_macro 'V', area, game_over_x + 20, game_over_y
+    make_text_macro 'E', area, game_over_x + 30, game_over_y
+    make_text_macro 'R', area, game_over_x + 40, game_over_y
 
     mov ecx, hi_score
     cmp score, ecx
@@ -957,7 +957,7 @@ restart_game:
     je game_on
 
     jmp key_post
-    
+
 a_press:
     dec curr_col
     check_pos curr_col, curr_row
@@ -1049,89 +1049,91 @@ timer_ok:
     jmp s_press
 
 afisare_scor:
-	; afisam valoarea scorului curent (sute, zeci si unitati)
-	mov ebx, 10
-	mov eax, score
-	; cifra unitatilor
-	mov edx, 0
-	div ebx
-	add edx, '0'
-	make_text_macro edx, area, score_x + 10, score_y
-	; cifra zecilor
-	mov edx, 0
-	div ebx
-	add edx, '0'
-	make_text_macro edx, area, score_x, score_y
-	; cifra sutelor
-	mov edx, 0
-	div ebx
-	add edx, '0'
-	make_text_macro edx, area, score_x - 10, score_y
+    ; afisam valoarea scorului curent (sute, zeci si unitati)
+    mov ebx, 10
+    mov eax, score
+    ; cifra unitatilor
+    mov edx, 0
+    div ebx
+    add edx, '0'
+    make_text_macro edx, area, score_x + 10, score_y
+    ; cifra zecilor
+    mov edx, 0
+    div ebx
+    add edx, '0'
+    make_text_macro edx, area, score_x, score_y
+    ; cifra sutelor
+    mov edx, 0
+    div ebx
+    add edx, '0'
+    make_text_macro edx, area, score_x - 10, score_y
 
-	make_text_macro 'S', area, score_x - 20, score_y - 20
-	make_text_macro 'C', area, score_x - 10, score_y - 20
-	make_text_macro 'O', area, score_x, score_y - 20
-	make_text_macro 'R', area, score_x + 10, score_y - 20
-	make_text_macro 'E', area, score_x + 20, score_y - 20
+    make_text_macro 'S', area, score_x - 20, score_y - 20
+    make_text_macro 'C', area, score_x - 10, score_y - 20
+    make_text_macro 'O', area, score_x, score_y - 20
+    make_text_macro 'R', area, score_x + 10, score_y - 20
+    make_text_macro 'E', area, score_x + 20, score_y - 20
 
-	; afisam valoarea high score-ului (sute, zeci si unitati)
-	mov ebx, 10
-	mov eax, hi_score
-	; cifra unitatilor
-	mov edx, 0
-	div ebx
-	add edx, '0'
-	make_text_macro edx, area, hi_score_x + 10, hi_score_y
-	; cifra zecilor
-	mov edx, 0
-	div ebx
-	add edx, '0'
-	make_text_macro edx, area, hi_score_x, hi_score_y
-	; cifra sutelor
-	mov edx, 0
-	div ebx
-	add edx, '0'
-	make_text_macro edx, area, hi_score_x - 10, hi_score_y
+    ; afisam valoarea high score-ului (sute, zeci si unitati)
+    mov ebx, 10
+    mov eax, hi_score
+    ; cifra unitatilor
+    mov edx, 0
+    div ebx
+    add edx, '0'
+    make_text_macro edx, area, hi_score_x + 10, hi_score_y
+    ; cifra zecilor
+    mov edx, 0
+    div ebx
+    add edx, '0'
+    make_text_macro edx, area, hi_score_x, hi_score_y
+    ; cifra sutelor
+    mov edx, 0
+    div ebx
+    add edx, '0'
+    make_text_macro edx, area, hi_score_x - 10, hi_score_y
 
-	make_text_macro 'H', area, hi_score_x - 30, hi_score_y - 20
-	make_text_macro 'I', area, hi_score_x - 20, hi_score_y - 20
-	make_text_macro ' ', area, hi_score_x - 10, hi_score_y - 20
-	make_text_macro 'S', area, hi_score_x, hi_score_y - 20
-	make_text_macro 'C', area, hi_score_x + 10, hi_score_y - 20
-	make_text_macro 'O', area, hi_score_x + 20, hi_score_y - 20
-	make_text_macro 'R', area, hi_score_x + 30, hi_score_y - 20
-	make_text_macro 'E', area, hi_score_x + 40, hi_score_y - 20
+    make_text_macro 'H', area, hi_score_x - 30, hi_score_y - 20
+    make_text_macro 'I', area, hi_score_x - 20, hi_score_y - 20
+    make_text_macro ' ', area, hi_score_x - 10, hi_score_y - 20
+    make_text_macro 'S', area, hi_score_x, hi_score_y - 20
+    make_text_macro 'C', area, hi_score_x + 10, hi_score_y - 20
+    make_text_macro 'O', area, hi_score_x + 20, hi_score_y - 20
+    make_text_macro 'R', area, hi_score_x + 30, hi_score_y - 20
+    make_text_macro 'E', area, hi_score_x + 40, hi_score_y - 20
 
 final_draw:
-	popa
-	mov esp, ebp
-	pop ebp
-	ret
+    popa
+    mov esp, ebp
+    pop ebp
+    ret
 draw endp
 
 start:
-	; alocam memorie pentru zona de desenat
-	mov eax, area_width
-	mov ebx, area_height
-	mul ebx
-	shl eax, 2
-	push eax
-	call malloc
-	add esp, 4
-	mov area, eax
-	; apelam functia de desenare a ferestrei
-	; typedef void (*DrawFunc)(int evt, int x, int y);
-	; void __cdecl BeginDrawing(const char *title, int width, int height, unsigned int *area, DrawFunc draw);
+    ; alocam memorie pentru zona de desenat
+    mov eax, area_width
+    mov ebx, area_height
+    mul ebx
+    shl eax, 2
 
-	push offset draw
-	push area
-	push area_height
-	push area_width
-	push offset window_title
-	call BeginDrawing
-	add esp, 20
+    push eax
+    call malloc
+    add esp, 4
+    mov area, eax
+    ; apelam functia de desenare a ferestrei
+    ; typedef void (*DrawFunc)(int evt, int x, int y);
+    ; void __cdecl BeginDrawing(const char *title, int width, int height, unsigned int *area, DrawFunc draw);
 
-	;terminarea programului
-	push 0
-	call exit
+    push offset draw
+    push area
+    push area_height
+    push area_width
+    push offset window_title
+    call BeginDrawing
+    add esp, 20
+
+    ;terminarea programului
+    push 0
+    call exit
 end start
+
